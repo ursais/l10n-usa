@@ -7,7 +7,6 @@
     <record id="view_type_1099_form" model="ir.ui.view">
         <field name="name">view.type.1099.form</field>
         <field name="model">type.1099</field>
-        <field name="type">form</field>
         <field name="arch" type="xml">
             <form string="1099 Type">
                 <sheet>
