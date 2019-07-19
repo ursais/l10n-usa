@@ -1,4 +1,5 @@
-# Copyright 2017 Open Source Integrators <https://opensourceintegrators.com>
+# Copyright (C) 2017 Open Source Integrators
+# Copyright (C) 2018 Brian McMaster
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
 {
@@ -15,9 +16,11 @@
         "account",
     ],
     "data": [
-        "security/ir.model.access.csv",
         "data/type_1099_data.xml",
+        "data/box_1099_misc_data.xml",
+        "security/ir.model.access.csv",
         "views/type_1099_view.xml",
+        "views/box_1099_misc_view.xml",
         "views/res_partner.xml",
         "reports/account_payment_1099_report_views.xml",
     ],
