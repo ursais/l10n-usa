@@ -24,7 +24,7 @@ class AccountPayment1099Report(models.Model):
                 pmt.payment_date AS date,
                 pmt.amount AS amount,
                 v.id AS vendor_id,
-                v.type_1099_id AS type_1099
+                v.type_1099_id AS type_1099,
                 v.box_1099_misc_id AS box_1099_misc
         """
 
