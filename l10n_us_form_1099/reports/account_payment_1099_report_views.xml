@@ -9,7 +9,7 @@
         <field name="model">account.payment.1099.report</field>
         <field name="arch" type="xml">
             <pivot string="1099 Payment Analysis" disable_linking="True">
-                <field name="type_1099_id" type="row"/>
+                <field name="type_1099" type="row"/>
                 <field name="date" interval="year" type="col"/>
                 <field name="amount" type="measure"/>
             </pivot>
@@ -21,7 +21,7 @@
         <field name="model">account.payment.1099.report</field>
         <field name="arch" type="xml">
             <graph string="1099 Payment Analysis">
-                <field name="type_1099_id" type="row"/>
+                <field name="type_1099" type="row"/>
                 <field name="date" interval="year" type="col"/>
                 <field name="amount" type="measure"/>
             </graph>

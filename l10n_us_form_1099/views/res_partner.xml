@@ -14,7 +14,7 @@
                 <field name="type_1099_id" widget="selection"
                        attrs="{'invisible': [('is_1099', '=', False)]}"/>
                 <field name="box_1099_misc_id" widget="selection"
-                       attrs="{'invisible': [('type_1099_id', '!=', ref('l10n_us_form_1099.1099_type_misc'))]}"/>
+                       attrs="{'invisible': [('type_1099_id', '!=', %(l10n_us_form_1099.1099_type_misc)d)]}"/>
             </xpath>
         </field>
     </record>

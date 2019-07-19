@@ -16,8 +16,9 @@
         "account",
     ],
     "data": [
-        "security/ir.model.access.csv",
         "data/type_1099_data.xml",
+        "data/box_1099_misc_data.xml",
+        "security/ir.model.access.csv",
         "views/type_1099_view.xml",
         "views/box_1099_misc_view.xml",
         "views/res_partner.xml",
