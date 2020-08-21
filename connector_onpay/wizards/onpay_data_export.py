@@ -30,26 +30,17 @@ class OnPayExport(models.TransientModel):
     def export_data(self):
         if self.file_type == 'csv':
             res_id, context = self.export_data_csv()
-            return {
-                'type': 'ir.actions.act_window',
-                'view_type': 'form',
-                'view_mode': 'form',
-                'res_model': 'wiz.xls.content',
-                'target': 'new',
-                'res_id': res_id.id,
-                'context': context,
-            }
         else:
             res_id, context = self.export_data_xls()
-            return {
-                'type': 'ir.actions.act_window',
-                'view_type': 'form',
-                'view_mode': 'form',
-                'res_model': 'wiz.xls.content',
-                'target': 'new',
-                'res_id': res_id.id,
-                'context': context,
-            }
+        return {
+            'type': 'ir.actions.act_window',
+            'view_type': 'form',
+            'view_mode': 'form',
+            'res_model': 'wiz.xls.content',
+            'target': 'new',
+            'res_id': res_id.id,
+            'context': context,
+        }
 
     @api.multi
     def export_data_csv(self):
