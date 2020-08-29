@@ -17,7 +17,7 @@
         "data/onpay_pay_type.xml",
         "views/project_time_type_view.xml",
         "views/hr_employee_view.xml",
-        "views/product_template_view.xml",
+        "views/product_product_view.xml",
         "wizards/onpay_data_export.xml",
     ],
     "auto_install": False,
