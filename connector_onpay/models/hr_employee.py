@@ -7,6 +7,6 @@ from odoo import models, fields
 class HrEmployee(models.Model):
     _inherit = 'hr.employee'
 
-    onpay_id = fields.Char(
+    onpay_code = fields.Char(
         string='OnPay ID',
     )

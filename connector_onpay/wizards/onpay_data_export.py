@@ -43,30 +43,35 @@ class OnPayExport(models.TransientModel):
         }
 
     @api.multi
+    def employee_timesheet_data(self, date_from, date_to):
+        # Timesheet data of employees between selected date
+        self._cr.execute("""select employee_id,line_onpay_id,
+                sum(unit_amount) as unit_amount from
+                account_analytic_line where
+                date >= %s and date <= %s and employee_id in %s group by
+                employee_id,line_onpay_id""",
+                         (date_from, date_to,
+                          tuple(self._context.get('active_ids')),))
+        return self._cr.dictfetchall()
+
+    @api.multi
     def export_data_csv(self):
         if self._context.get('active_ids'):
             emp_obj = self.env['hr.employee']
             onpay_type_obj = self.env['onpay.pay.type']
 
-            # Timesheet data of employees between selected date
-            self._cr.execute("select employee_id,line_onpay_id,\
-                sum(unit_amount) as unit_amount from \
-                account_analytic_line where \
-                date >= %s and date <= %s and employee_id in %s \
-                group by employee_id,line_onpay_id", (
-                self.date_from, self.date_to,
-                tuple(self._context.get('active_ids')),))
-            my_data = self._cr.dictfetchall()
+            my_data = self.employee_timesheet_data(
+                self.date_from, self.date_to)
 
             # Expense data (approved) of employees between selected date
-            self._cr.execute("select employee_id,expense_onpay_id,\
-                sum(total_amount) as \
-                total_amount from \
-                hr_expense where date >= %s and \
-                date <= %s and state='approved' and employee_id in %s \
-                group by employee_id,expense_onpay_id", (
-                self.date_from, self.date_to,
-                tuple(self._context.get('active_ids')),))
+            self._cr.execute("""select employee_id,expense_onpay_id,
+                sum(total_amount) as
+                total_amount from
+                hr_expense where date >= %s and
+                date <= %s and state='approved' and employee_id in %s
+                group by employee_id,expense_onpay_id""",
+                             (self.date_from, self.date_to,
+                              tuple(self._context.get('active_ids')),))
             expense_data = self._cr.dictfetchall()
 
             # XLS sheet creation with header
@@ -83,7 +88,7 @@ class OnPayExport(models.TransientModel):
                     on_pay_id = onpay_type_obj.browse(
                         data.get('line_onpay_id'))
                     writer.writerow([1, on_pay_id.code,
-                                     emp_id.onpay_id, data.get(
+                                     emp_id.onpay_code, data.get(
                                          'unit_amount'), "",
                                      on_pay_id.treat_as_cash])
 
@@ -93,7 +98,7 @@ class OnPayExport(models.TransientModel):
                     onpay_exp_id = onpay_type_obj.browse(
                         exp.get('expense_onpay_id'))
                     writer.writerow([1, onpay_exp_id.code,
-                                     emp_id_exp.onpay_id, "", exp.get(
+                                     emp_id_exp.onpay_code, "", exp.get(
                                          'total_amount'),
                                      onpay_exp_id.treat_as_cash])
 
@@ -122,24 +127,17 @@ class OnPayExport(models.TransientModel):
             emp_obj = self.env['hr.employee']
             onpay_type_obj = self.env['onpay.pay.type']
 
-            # Timesheet data of employees between selected date
-            self._cr.execute("select employee_id,line_onpay_id,\
-                sum(unit_amount) as unit_amount from \
-                account_analytic_line where \
-                date >= %s and date <= %s and employee_id in %s \
-                group by employee_id,line_onpay_id", (
-                self.date_from, self.date_to,
-                tuple(self._context.get('active_ids')),))
-            my_data = self._cr.dictfetchall()
+            my_data = self.employee_timesheet_data(
+                self.date_from, self.date_to)
 
             # Expense data (approved) of employees between selected date
-            self._cr.execute("select employee_id,sum(total_amount) as \
-                total_amount from \
-                hr_expense where date >= %s and \
-                date <= %s and state='approved' and employee_id in %s \
-                group by employee_id", (
-                self.date_from, self.date_to,
-                tuple(self._context.get('active_ids')),))
+            self._cr.execute("""select employee_id,sum(total_amount) as
+                total_amount from
+                hr_expense where date >= %s and
+                date <= %s and state='approved' and employee_id in %s
+                group by employee_id""",
+                             (self.date_from, self.date_to,
+                              tuple(self._context.get('active_ids')),))
             expense_data = self._cr.dictfetchall()
 
             # XLS sheet creation with header
@@ -169,7 +167,7 @@ class OnPayExport(models.TransientModel):
                 worksheet.write(row, 0, '1')
                 worksheet.write(
                     row, 1, on_pay_id.code)
-                worksheet.write(row, 2, emp_id.onpay_id)
+                worksheet.write(row, 2, emp_id.onpay_code)
                 worksheet.write(row, 3, data.get('unit_amount'))
                 worksheet.write(row, 4, '')
                 worksheet.write(
@@ -185,7 +183,7 @@ class OnPayExport(models.TransientModel):
                 worksheet.write(row, 0, '1')
                 worksheet.write(
                     row, 1, onpay_type_id_exp.code)
-                worksheet.write(row, 2, emp_id_exp.onpay_id)
+                worksheet.write(row, 2, emp_id_exp.onpay_code)
                 worksheet.write(row, 3, '')
                 worksheet.write(row, 4, exp.get('total_amount'))
                 worksheet.write(
@@ -222,9 +220,7 @@ class WizOnPayXLSContent(models.TransientModel):
 
     @api.model
     def default_get(self, fields):
-        """
-        This method is used to get default file name and file content
-        """
+        # This method is used to get default file name and file content
         context = self._context
         res = super(WizOnPayXLSContent, self).default_get(fields)
         # res.update({'name': 'OnPay_Data.xlsx'})
