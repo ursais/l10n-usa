@@ -90,7 +90,7 @@ class OnPayExport(models.TransientModel):
                     writer.writerow([1, on_pay_id.code,
                                      emp_id.onpay_code, data.get(
                                          'unit_amount'), "",
-                                     on_pay_id.treat_as_cash])
+                                     on_pay_id.treat_as_cash and 1 or 0])
 
                 # Write the data of expense in the xls sheet
                 for exp in expense_data:
@@ -100,7 +100,7 @@ class OnPayExport(models.TransientModel):
                     writer.writerow([1, onpay_exp_id.code,
                                      emp_id_exp.onpay_code, "", exp.get(
                                          'total_amount'),
-                                     onpay_exp_id.treat_as_cash])
+                                     onpay_exp_id.treat_as_cash and 1 or 0])
 
             buf = base64.encodestring(
                 open(str(file_path[1]) + '.csv', 'rb').read())
@@ -171,7 +171,7 @@ class OnPayExport(models.TransientModel):
                 worksheet.write(row, 3, data.get('unit_amount'))
                 worksheet.write(row, 4, '')
                 worksheet.write(
-                    row, 5, on_pay_id.treat_as_cash)
+                    row, 5, on_pay_id.treat_as_cash and 1 or 0)
                 row += 1
 
             # Find the static onpay type for an expense for now
@@ -187,7 +187,7 @@ class OnPayExport(models.TransientModel):
                 worksheet.write(row, 3, '')
                 worksheet.write(row, 4, exp.get('total_amount'))
                 worksheet.write(
-                    row, 5, onpay_type_id_exp.treat_as_cash)
+                    row, 5, onpay_type_id_exp.treat_as_cash and 1 or 0)
                 row += 1
 
             worksheet.freeze_panes(1, 0)
