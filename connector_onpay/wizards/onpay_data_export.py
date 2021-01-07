@@ -45,8 +45,11 @@ class OnPayExport(models.TransientModel):
             """select aal.employee_id, aal.line_onpay_id,
                 sum(aal.unit_amount) as unit_amount from
                 account_analytic_line as aal
-                LEFT JOIN hr_employee he ON aal.employee_id = he.id
+                LEFT JOIN hr_employee he ON aal.employee_id = he.id 
+                LEFT JOIN project_time_type ptt ON aal.time_type_id = ptt.id
                 where he.onpay_code IS NOT Null and
+                aal.time_type_id IS NOT Null and
+                ptt.onpay_pay_type_id IS NOT Null and
                 date >= %s and date <= %s and employee_id in %s group by
                 employee_id,line_onpay_id""",
             (
