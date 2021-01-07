@@ -5,15 +5,15 @@ from odoo import fields, models
 
 
 class OnPayType(models.Model):
-    _name = 'onpay.pay.type'
-    _description = 'OnPay Pay Type'
+    _name = "onpay.pay.type"
+    _description = "OnPay Pay Type"
 
     name = fields.Char(
-        string='Name',
+        string="Name",
     )
     code = fields.Char(
-        string='Code',
+        string="Code",
     )
     treat_as_cash = fields.Boolean(
-        string='Treat as Cash',
+        string="Treat as Cash",
     )

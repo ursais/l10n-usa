@@ -5,9 +5,10 @@ from odoo import models, fields
 
 
 class HrExpense(models.Model):
-    _inherit = 'hr.expense'
+    _inherit = "hr.expense"
 
     expense_onpay_id = fields.Many2one(
         related="product_id.product_onpay_id",
-        string="OnPay Pay Type", store=True
+        string="OnPay Pay Type",
+        store=True
     )

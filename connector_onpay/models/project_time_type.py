@@ -18,5 +18,6 @@ class AnalyticLine(models.Model):
 
     line_onpay_id = fields.Many2one(
         related="time_type_id.onpay_pay_type_id",
-        string="OnPay Pay Type", store=True
+        string="OnPay Pay Type",
+        store=True
     )

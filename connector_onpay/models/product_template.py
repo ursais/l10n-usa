@@ -5,9 +5,9 @@ from odoo import models, fields
 
 
 class ProductTemplate(models.Model):
-    _inherit = 'product.template'
+    _inherit = "product.template"
 
     product_onpay_id = fields.Many2one(
-        'onpay.pay.type',
-        string='OnPay Type',
+        "onpay.pay.type",
+        string="OnPay Type",
     )

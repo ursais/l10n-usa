@@ -9,7 +9,8 @@
     "website": "https://github.com/OCA/l10n-usa",
     "category": "Payroll",
     "depends": [
-        "hr_timesheet_time_type", "hr_expense",
+        "hr_timesheet_time_type",
+        "hr_expense",
     ],
     "data": [
         "security/res_groups.xml",
@@ -19,6 +20,7 @@
         "views/hr_employee_view.xml",
         "views/product_product_view.xml",
         "wizards/onpay_data_export.xml",
+        "views/hr_timesheet.xml",
     ],
     "auto_install": False,
     "application": False,
