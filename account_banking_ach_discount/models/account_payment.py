@@ -50,10 +50,8 @@ class AccountPayment(models.Model):
 class AccountPaymentLine(models.Model):
     _inherit = "account.payment.line"
 
-    discount_amount = fields.Monetary(currency_field="currency_id")
-    total_amount = fields.Monetary(
-        compute="_compute_total_amount", currency_field="currency_id"
-    )
+    discount_amount = fields.Monetary(currency_field="currency_id",readonly=True)
+    total_amount = fields.Monetary(currency_field="currency_id",readonly=True)
     payment_difference_handling = fields.Selection(
         [("open", "Keep open"), ("reconcile", "Mark invoice as fully paid")],
         default="reconcile",
@@ -73,10 +71,11 @@ class AccountPaymentLine(models.Model):
         "account.move", related="move_line_id.move_id", store=True
     )
 
-    @api.depends("amount_currency", "discount_amount")
-    def _compute_total_amount(self):
+    @api.onchange("amount_currency")
+    def _onchange_amount_currency(self):
         for line in self:
-            line.total_amount = line.amount_currency + line.payment_difference
+            if not line.total_amount and not line.payment_difference:
+                line.total_amount = line.amount_currency
 
     @api.model
     def same_fields_payment_line_and_bank_payment_line(self):

@@ -19,8 +19,10 @@ class AccountPaymentOrder(models.Model):
 
                     temp_vals = vals[2].copy()
                     amount = line.amount_currency
+                    total_amount = line.total_amount
+                    amount_difference = round((total_amount - amount),2)
                     discount = line.discount_amount
-                    payment_difference = line.payment_difference
+                    line.payment_difference = payment_difference = amount_difference
                     writeoff = (
                         payment_difference and payment_difference - discount or 0.0
                     )
@@ -29,16 +31,15 @@ class AccountPaymentOrder(models.Model):
                         "in_invoice",
                         "out_refund",
                     )
-
                     temp_vals["move_id"] = line.move_id.id
                     if use_debit:
-                        temp_vals["debit"] = amount + discount
+                        temp_vals["debit"] = total_amount - payment_difference
                     else:
-                        temp_vals["credit"] = amount + discount
+                        temp_vals["credit"] = total_amount - payment_difference
 
                     line_ids.append((0, 0, temp_vals))
 
-                    if discount > 0:
+                    if discount > 0 and discount == payment_difference:
                         discount_information = line.move_id.invoice_payment_term_id._check_payment_term_discount(
                             line.move_id, line.date
                         )
@@ -55,17 +56,18 @@ class AccountPaymentOrder(models.Model):
                         if discount_vals:
                             line_ids.append((0, 0, discount_vals))
 
-                    if invoice_close and round(writeoff, 2):
+                    if invoice_close :
                         if use_debit:
-                            temp_vals["debit"] = amount + discount + round(writeoff, 2)
+                            temp_vals["debit"] = amount + payment_difference
                         else:
-                            temp_vals["credit"] = amount + discount + round(writeoff, 2)
-                        writeoff_vals = line.move_id._prepare_writeoff_move_line(
-                            line, temp_vals.copy()
-                        )
-                        writeoff_vals["bank_payment_line_id"] = False
-                        if writeoff_vals:
-                            line_ids.append((0, 0, writeoff_vals))
+                            temp_vals["credit"] = amount + payment_difference
+                        if round(writeoff, 2):
+                            writeoff_vals = line.move_id._prepare_writeoff_move_line(
+                                line, temp_vals.copy()
+                            )
+                            writeoff_vals["bank_payment_line_id"] = False
+                            if writeoff_vals:
+                                line_ids.append((0, 0, writeoff_vals))
             # payment order line
             else:
                 line_ids.append(vals)

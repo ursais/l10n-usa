@@ -56,6 +56,7 @@ class AccountPaymentRegister(models.TransientModel):
                                 "communication_type": "normal",
                                 "amount_currency": line.amount,
                                 "payment_difference": line.payment_difference,
+                                "total_amount": line.amount + line.payment_difference,
                             }
                         )
                 return action
