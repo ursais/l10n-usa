@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+
+    <!-- Inherited view for Register Payment as Batch -->
+    <record id="view_account_batch_payment_inherit" model="ir.ui.view">
+        <field name="name">account.payment.register.wizard</field>
+        <field name="model">account.payment.register</field>
+        <field
+            name="inherit_id"
+            ref="account_payment_batch_process.view_account_payment_from_invoices_batch_inherited"
+        />
+        <field name="arch" type="xml">
+            <field name="balance" position="attributes">
+                <attribute name="readonly">1</attribute>
+                <attribute name="force_save">1</attribute>
+            </field>
+        </field>
+    </record>
+</odoo>

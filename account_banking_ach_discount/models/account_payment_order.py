@@ -20,12 +20,9 @@ class AccountPaymentOrder(models.Model):
                     temp_vals = vals[2].copy()
                     amount = line.amount_currency
                     total_amount = line.total_amount
-                    amount_difference = round((total_amount - amount),2)
-                    discount = line.discount_amount
-                    line.payment_difference = payment_difference = amount_difference
-                    writeoff = (
-                        payment_difference and payment_difference - discount or 0.0
-                    )
+                    amount_difference = round((total_amount - amount), 2)
+                    payment_difference = amount_difference
+                    writeoff = payment_difference or 0.0
                     invoice_close = line.payment_difference_handling != "open"
                     use_debit = line.move_id.move_type in (
                         "in_invoice",
@@ -39,24 +36,7 @@ class AccountPaymentOrder(models.Model):
 
                     line_ids.append((0, 0, temp_vals))
 
-                    if discount > 0 and discount == payment_difference:
-                        discount_information = line.move_id.invoice_payment_term_id._check_payment_term_discount(
-                            line.move_id, line.date
-                        )
-                        discount_vals = temp_vals.copy()
-                        discount_vals["account_id"] = discount_information[1]
-                        discount_vals["name"] = "Early Pay Discount"
-                        if use_debit:
-                            discount_vals["debit"] = 0.0
-                            discount_vals["credit"] = discount_information[0]
-                        else:
-                            discount_vals["credit"] = 0.0
-                            discount_vals["debit"] = discount_information[0]
-                        discount_vals["bank_payment_line_id"] = False
-                        if discount_vals:
-                            line_ids.append((0, 0, discount_vals))
-
-                    if invoice_close :
+                    if invoice_close:
                         if use_debit:
                             temp_vals["debit"] = amount + payment_difference
                         else:

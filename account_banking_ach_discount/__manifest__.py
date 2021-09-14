@@ -20,5 +20,6 @@
     ],
     "data": [
         "views/account_payment_view.xml",
+        "wizard/account_payment_register.xml",
     ],
 }
