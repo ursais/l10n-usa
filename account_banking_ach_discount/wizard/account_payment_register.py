@@ -44,10 +44,11 @@ class AccountPaymentRegister(models.TransientModel):
                     # Find related ACH transaction line
                     domain = [("move_id", "=", invoice_id.id), ("state", "=", "draft")]
                     ach_lines = payment_line_pool.search(domain)
+                    payment_diff = line.payment_difference_handling
                     if ach_lines:
                         ach_lines.write(
                             {
-                                "payment_difference_handling": line.payment_difference_handling,
+                                "payment_difference_handling": payment_diff,
                                 "writeoff_account_id": line.writeoff_account_id.id,
                                 "reason_code": line.reason_code.id,
                                 "note": line.note,
@@ -56,6 +57,8 @@ class AccountPaymentRegister(models.TransientModel):
                                 "communication_type": "normal",
                                 "amount_currency": line.amount,
                                 "payment_difference": line.payment_difference,
+                                "discount_amount": line.payment_difference,
+                                "total_amount": line.amount + line.payment_difference,
                             }
                         )
                 return action
