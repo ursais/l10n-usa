@@ -37,7 +37,6 @@ class AccountBankingMandate(models.Model):
     )
     scheme = fields.Selection(
         [("CORE", "Basic (CORE)"), ("B2B", "Enterprise (B2B)")],
-        string="Scheme",
         default="CORE",
         tracking=True,
     )
