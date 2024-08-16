@@ -76,7 +76,7 @@ class AccountPaymentLine(models.Model):
     note = fields.Text("Note")
     payment_difference = fields.Float(string="Payment Difference")
     move_id = fields.Many2one(
-        "account.move", related="move_line_id.move_id", store=True
+        "account.move", related="move_line_id.move_id", store=True, index=True
     )
 
     @api.onchange("discount_amount")
