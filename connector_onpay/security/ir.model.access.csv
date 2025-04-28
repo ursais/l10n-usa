@@ -1,0 +1,4 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_onpay_pay_type_group,onpay.pay.type,model_onpay_pay_type,group_onpay_allow_export,1,0,0,0
+connector_onpay.access_onpay_export,access_onpay_export,connector_onpay.model_onpay_export,base.group_user,1,1,1,1
+connector_onpay.access_wiz_xls_content,access_wiz_xls_content,connector_onpay.model_wiz_xls_content,base.group_user,1,1,1,1
